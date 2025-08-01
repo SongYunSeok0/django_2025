@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8" />
-    <title>글쓰기 페이지</title>
-</head>
-<body>
-    postform.thml입니다.
-    글쓰는 화면입니다.
-    http://127.0.0.1:8000/blog/create/
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ postform }}
-        <input type="submit">
-    </form>
+{% extends 'blog/base.html'%}
+{% block main-area %}
+    <div class="my-2" style="font-size: 20px;">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="my-5">
+                {{ postform }}
+            </div>
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}
 
-
-    
-
-</body>
-</html>
+{% block header %}
+    <h1 class="fw-bolder">글 올리기</h1>
+{% endblock %}

@@ -6,4 +6,5 @@ urlpatterns = [
     path('<int:pk>/', views.detail, name="detail"),
     path('create/', views.create, name="blogcreate"),
     path('createfake/', views.createfake, name="fakeblogcreate"),
+    path('category/<slug>/', views.category, name='category'),
 ]

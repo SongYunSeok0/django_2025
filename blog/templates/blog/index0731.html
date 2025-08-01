@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -73,7 +74,8 @@
         <header class="py-5 bg-light border-bottom mb-4">
             <div class="container">
                 <div class="text-center my-5">
-                    <h1 class="fw-bolder">번개장터</h1>
+                    <h1 class="fw-bolder">블로그</h1>
+                    <p class="lead mb-0">A Bootstrap 5 starter layout for your next blog homepage</p>
                 </div>
             </div>
         </header>
@@ -81,7 +83,7 @@
         <div class="container">
             <div class="row">
                 <!-- Blog entries-->
-                <div class="col-lg-6">
+                <div class="col-lg-8">
                     {% for post in posts %}
                     <!-- Featured blog post-->
                     <div class="card mb-4">
@@ -94,7 +96,7 @@
                             <div class="small text-muted">January 1, 2023</div>
                                 <h2 class="card-title">{{ post.title }}</h2>
                                 <p class="card-text">{{ post.content }}</p>
-                                <a class="btn btn-primary" href="/shop/{{post.pk}}">Read more →</a>
+                                <a class="btn btn-primary" href="/blog/{{post.pk}}">Read more →</a>
                             </div>
                         </div>
                     
@@ -118,7 +120,7 @@
                 <div class="col-lg-4">
                     <!-- Search widget-->
                     <div class="card mb-4">
-                        <button class ="button mb-4"><a href="/shop/create">판매하기</a></button>
+                        <button><a href="/blog/create">글쓰기</a></button>
                         <div class="card-header">Search</div>
                         <div class="card-body">
                             <div class="input-group">
