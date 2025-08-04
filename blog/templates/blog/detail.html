@@ -14,6 +14,8 @@
             {% else %}
                 <a class="badge bg-secondary text-decoration-none link-light" href="#!">미분류</a>
             {% endif %}
+            <a class="btn btn-primary" href="/blog/{{post.pk}}/delete/">글지우기</a>
+            <a class="btn btn-success" href="/blog/{{post.pk}}/update/">글수정하기</a>
         </header>
         <!-- Preview image figure-->
         <figure class="mb-4">
@@ -32,49 +34,66 @@
         </section>
     </article>
 
-    <section class="mb-5">
+<section class="mb-5">
     <div class="card bg-light">
         <div class="card-body">
-            <!-- Comment form-->
-            <form class="mb-4"><textarea class="form-control" rows="3" placeholder="Join the discussion and leave a comment!"></textarea></form>
-            <!-- Comment with nested comments-->
-            <div class="d-flex mb-4">
-                <!-- Parent comment-->
-                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                <div class="ms-3">
-                    <div class="fw-bold">Commenter Name</div>
-                    If you're going to lead a space frontier, it has to be government; it'll never be private enterprise. Because the space frontier is dangerous, and it's expensive, and it has unquantified risks.
-                    <!-- Child comment 1-->
-                    <div class="d-flex mt-4">
-                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                        <div class="ms-3">
-                            <div class="fw-bold">Commenter Name</div>
-                            And under those conditions, you cannot establish a capital-market evaluation of that enterprise. You can't get investors.
+        
+            <!-- 댓글 목록 -->
+            {% for comment in comments %}
+            <div class="d-flex align-items-start border-bottom mb-3 pb-3">
+                <!-- 프로필 이미지 -->
+                <div class="flex-shrink-0 me-3">
+                    <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
+                </div>
+            
+                <!-- 댓글 내용 영역 -->
+                <div class="flex-grow-1 w-100">
+                    <!-- 작성자 + 날짜 + 버튼 (한 줄) -->
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong style="font-size: 1.2em;">{{ comment.author }}</strong>
+                            <span class="text-muted ms-2" style="font-size: 0.9em;">
+                                ({{ comment.created_date|date:"Y-m-d H:i" }})
+                            </span>
+                        </div>
+                        <div>
+                            <a href="{% url 'updatecomment' comment.pk %}" class="btn btn-sm btn-outline-primary me-1" style="font-size: 0.75em;">수정</a>
+                            <a href="{% url 'deletecomment' comment.pk %}" class="btn btn-sm btn-outline-primary" style="font-size: 0.75em;">삭제</a>
                         </div>
                     </div>
-                    <!-- Child comment 2-->
-                    <div class="d-flex mt-4">
-                        <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                        <div class="ms-3">
-                            <div class="fw-bold">Commenter Name</div>
-                            When you put money directly to a problem, it makes a good headline.
-                        </div>
+                
+                    <!-- 댓글 본문 (아래줄) -->
+                    <div class="mt-1">
+                        <span style="font-size: 1.1em;">{{ comment.comment }}</span>
                     </div>
                 </div>
             </div>
-            <!-- Single comment-->
-            <div class="d-flex">
-                <div class="flex-shrink-0"><img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." /></div>
-                <div class="ms-3">
-                    <div class="fw-bold">Commenter Name</div>
-                    When I look at the universe and all the ways the universe wants to kill us, I find it hard to reconcile that with statements of beneficence.
+
+            {% endfor %}
+
+            <!-- 댓글 작성 폼 -->
+            <form method="post" action="{% url 'createcomment' post.pk %}" class="mt-4">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label for="{{ commentform.author.id_for_label }}" class="form-label">작성자</label>
+                    {{ commentform.author }}
+                </div>  
+
+                <div class="mb-3">
+                    <label for="{{ commentform.comment.id_for_label }}" class="form-label">댓글</label>
+                    {{ commentform.comment }}
                 </div>
-            </div>
+
+                <button type="submit" class="btn btn-primary">제출</button>
+            </form>
+
         </div>
     </div>
 </section>
 </div>
 {% endblock %}
+
 
 {% block header %}
     <h1 class="fw-bolder">상세 페이지</h1>

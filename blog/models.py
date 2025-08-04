@@ -10,8 +10,7 @@ class Category(models.Model):
         return f'{self.name}----{self.slug}'
     def get_url(self):
         return f'/blog/category/{self.slug}'
-
-
+    
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
@@ -28,3 +27,13 @@ class Post(models.Model):
 
     def __str__(self):
         return f'게시글제목 : {self.title} -by {self.author} - category : {self.category} - 게시글내용 - {self.content} - 생성시간 - {self.created_date} - 업데이트 - {self.updated_date}'
+    
+class Comment(models.Model):
+    post = models.ForeignKey(Post ,on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.TextField()
+    created_date  = models.DateTimeField(auto_now_add=True, null=True)
+    updated_date  = models.DateTimeField(auto_now=True, null=True)
+
+    def __str__(self):
+        return (f'{self.author.username} -- {self.comment } in { self.post.title}')
