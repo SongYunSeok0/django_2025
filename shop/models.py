@@ -25,4 +25,4 @@ class Bottom(models.Model):
 class Shoes(models.Model):
     brand = models.CharField(max_length=100)
     price = models.IntegerField()
-    size = models.CharField(max_length=3)
+    size = models.CharField(max_length=3)   
