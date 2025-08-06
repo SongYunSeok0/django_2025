@@ -1,17 +1,14 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>title</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" 
-            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
-            crossorigin="anonymous">
-    </script>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 </head>
 <body>
-    안녕하세요
-    <script>
-    // CSRF 토큰 가져오기 함수
+<script>
+  // CSRF 토큰 가져오기 함수
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -29,75 +26,79 @@
     }
     const csrftoken = getCookie('csrftoken');
 
-    $(document).ready(function() {
-        getPostList();
-    })
+        $(document).ready(function(){
+          getPostlist();
+        })
 
-    function getPostList(){ 
-        $('#postList').empty();
-        $.ajax(
-            {
-                url     : "{% url 'blogAPI' %}",
-                type    : "GET",
+        function getPostlist(){
+            $('#postList').empty();
+            $.ajax(
+                {
+                url : "{% url 'blogAPI' %}",
+                type : "GET",
                 success : function(data){
                     console.log(data);
                     let list = data;
                     $(list).each(function(){
                         console.log(this);
-                        let str = '';
-                        str += '<hr>';
-                        str += '<div>';
-                        str += this.title + '&nbsp;&nbsp;&nbsp;';
-                        str += this.author + '&nbsp;&nbsp;&nbsp;';
-                        str += this.content + '&nbsp;&nbsp;&nbsp;';
-                        str += '</div>';
+                        let str ="";
+                        str +='<hr>';
+                        str +="<div>";
+                        str += this.title+"&nbsp&nbsp&nbsp";
+                        str += this.author+"&nbsp&nbsp&nbsp";
+                        str += this.content+"&nbsp&nbsp&nbsp";
+                        str +='</div>';
                         $('#postList').append(str);
                     })
-                    alert("전체글 성공");
+                    alert('전체글 성공');
                 },
                 error : function(){
-                    alert("전체글 실패");
+                    alert('전체글 실패');
                 }
             }
-        )
-    }
+            )
+        }
 
-    $(document).ready(function(){
-        $('#postAddBtn').click(function(){
-            const post = {
-                title   : $('#title').val(),
-                author   : $('#author').val(),
-                content : $('#content').val()
-            };
-            $.ajax({
-                url         : "{% url 'blogAPI' %}",
-                type        : "POST",
-                contentType : 'application/json',
-                headers     : {'X-CSRFToken' : csrftoken},
-                data        : JSON.stringify(post),
-                success     : function(){
-                    alert("새글성공");
-                    getPostList();
-                },
-                error   : function(){
-                    alert("새글작성실패");
-                }
-            })
-        });
-    })
+        $(document).ready(function(){
+            $('#postAddBtn').click(function(){
+                const post={
+                    title : $('#title').val(),
+                    author: $('#author').val(),
+                    content : $('#content').val(),
 
-    </script>
-    <h3>새글작성</h3>
-    작성 화면 버튼
-    <form id="postform">
-        <input type="text" id="title" placeholder="title" required><br>
-        <input type="text" id="author" placeholder="author" required><br>
-        <input type="text" id="content" placeholder="content" required><br>
-        <input type="button" id="postAddBtn" value="새글작성하기">
-    </form>
-    <div id="result"></div>
-    <h1>글 목록입니다.</h1>
+                };
+                $.ajax({
+                    url : '{% url 'blogAPI' %}',
+                    type : "POST",
+                    contentType : "application/json",
+                    data: JSON.stringify(post),
+                    headers: {'X-CSRFToken': csrftoken},
+                    success : function(data){
+                        console.log(data);
+                        $('#title').val('')
+                        $('#author').val('')
+                        $('#content').val('')
+                        getPostlist();
+                    },
+                    error : function(data){
+                        alert('새글 작성 실패');
+                    }
+                })
+            });
+        })
+</script>
+<h3>새글 작성</h3>
+작성 화면, 버튼
+<form id="postform">
+    <input type="text" id="title" placeholder="title" required><br>
+    <input type="text" id="author" placeholder="author" required><br>
+    <input type="text" id="content" placeholder="content" required><br>
+    <input type="button" id="postAddBtn" value="새글 작성하기">
+
+</form>
+<div id="result"></div>
+
+    <h1>글 목록입니다</h1>
     <div id="postList"></div>
-
 </body>
 </html>
