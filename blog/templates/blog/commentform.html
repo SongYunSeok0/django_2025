@@ -1,0 +1,16 @@
+{% extends 'blog/base.html'%}
+{% block main-area %}
+    <div class="my-2" style="font-size: 20px;">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="my-5">
+                {{ commentform }}
+            </div>
+            <input type="submit">
+        </form>
+    </div>
+{% endblock %}
+
+{% block header %}
+    <h1 class="fw-bolder">글올리기</h1>
+{% endblock %}

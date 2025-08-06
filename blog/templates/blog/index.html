@@ -1,21 +1,37 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8" />
-    <title>Blog</title>
-</head>
-<body>
-    templates/blog/index.html
-    Blog - 전체글 리스트입니다.
-    for post in posts
-        print(post)
-    {% for post in posts %}
-        <h1>{{ post }} </h1>
-
-        <h3>제목 : {{ post.title }} </h3>
-        <h3>내용 : {{ post.content }} </h3>
-        <h3>생성일 : {{ post.created_date }} </h3>
-        <hr>
-    {% endfor %}
-</body>
-</html>
+{% extends "blog/base.html" %}
+{% block main-area %}
+<div class="col-lg-8" id="main-area">
+        {% for post in posts %}
+        <!-- Featured blog post-->
+        <div class="card mb-4">
+                {% if post.uploaded_image %}
+                    <a href="#!"><img class="img-fluid rounded" src={{ post.uploaded_image.url }} alt="..." /></a>
+                {% else %}
+                    <a href="#!"><img class="img-fluid rounded" src="https://dummyimage.com/800x800/ced4da/6c757d.jpg" alt="..." /></a>
+                {% endif %}
+            <div class="card-body">
+                <div class="small text-muted">{{ post.created_date}}</div><hr>
+                    <h7 class="card-title">글쓴이 : {{post.author}}</h7><hr>
+                    <h7 class="card-title">카테고리 : {{post.category.name}}</h7><hr>
+                    <h2 class="card-title">{{ post.title }}</h2>
+                    <p class="card-text">{{ post.content }}</p>
+                    <a class="btn btn-primary" href="/blog/{{post.pk}}">Read more →</a>
+                </div>
+            </div>
+         {% endfor %}
+       
+        <!-- Pagination-->
+        <nav aria-label="Pagination">
+            <hr class="my-0" />
+            <ul class="pagination justify-content-center my-4">
+                <li class="page-item disabled"><a class="page-link" href="#" tabindex="-1" aria-disabled="true">Newer</a></li>
+                <li class="page-item active" aria-current="page"><a class="page-link" href="#!">1</a></li>
+                <li class="page-item"><a class="page-link" href="#!">2</a></li>
+                <li class="page-item"><a class="page-link" href="#!">3</a></li>
+                <li class="page-item disabled"><a class="page-link" href="#!">...</a></li>
+                <li class="page-item"><a class="page-link" href="#!">15</a></li>
+                <li class="page-item"><a class="page-link" href="#!">Older</a></li>
+            </ul>
+        </nav>
+    </div>
+{% endblock %}
