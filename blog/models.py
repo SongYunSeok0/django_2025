@@ -21,9 +21,9 @@ class Post(models.Model):
     updated_date = models.DateTimeField(auto_now=True, null=True)
 
     uploaded_image = models.ImageField(upload_to='images/',
-                                       blank=True)
+                                       blank=True, null=True)
     uploaded_file = models.FileField(upload_to='files/',
-                                     blank=True)
+                                     blank=True, null=True)
 
     def __str__(self):
         return f'게시글제목 : {self.title} -by {self.author} - category : {self.category} - 게시글내용 - {self.content} - 생성시간 - {self.created_date} - 업데이트 - {self.updated_date}'

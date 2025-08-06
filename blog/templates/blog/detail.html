@@ -34,63 +34,63 @@
         </section>
     </article>
 
-<section class="mb-5">
-    <div class="card bg-light">
-        <div class="card-body">
-        
-            <!-- 댓글 목록 -->
-            {% for comment in comments %}
-            <div class="d-flex align-items-start border-bottom mb-3 pb-3">
-                <!-- 프로필 이미지 -->
-                <div class="flex-shrink-0 me-3">
-                    <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
-                </div>
+    <section class="mb-5">
+        <div class="card bg-light">
+            <div class="card-body">
             
-                <!-- 댓글 내용 영역 -->
-                <div class="flex-grow-1 w-100">
-                    <!-- 작성자 + 날짜 + 버튼 (한 줄) -->
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <strong style="font-size: 1.2em;">{{ comment.author }}</strong>
-                            <span class="text-muted ms-2" style="font-size: 0.9em;">
-                                ({{ comment.created_date|date:"Y-m-d H:i" }})
-                            </span>
-                        </div>
-                        <div>
-                            <a href="{% url 'updatecomment' comment.pk %}" class="btn btn-sm btn-outline-primary me-1" style="font-size: 0.75em;">수정</a>
-                            <a href="{% url 'deletecomment' comment.pk %}" class="btn btn-sm btn-outline-primary" style="font-size: 0.75em;">삭제</a>
-                        </div>
+                <!-- 댓글 목록 -->
+                {% for comment in comments %}
+                <div class="d-flex align-items-start border-bottom mb-3 pb-3">
+                    <!-- 프로필 이미지 -->
+                    <div class="flex-shrink-0 me-3">
+                        <img class="rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg" alt="..." />
                     </div>
                 
-                    <!-- 댓글 본문 (아래줄) -->
-                    <div class="mt-1">
-                        <span style="font-size: 1.1em;">{{ comment.comment }}</span>
+                    <!-- 댓글 내용 영역 -->
+                    <div class="flex-grow-1 w-100">
+                        <!-- 작성자 + 날짜 + 버튼 (한 줄) -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong style="font-size: 1.2em;">{{ comment.author }}</strong>
+                                <span class="text-muted ms-2" style="font-size: 0.9em;">
+                                    ({{ comment.created_date|date:"Y-m-d H:i" }})
+                                </span>
+                            </div>
+                            <div>
+                                <a href="{% url 'updatecomment' comment.pk %}" class="btn btn-sm btn-outline-primary me-1" style="font-size: 0.75em;">수정</a>
+                                <a href="{% url 'deletecomment' comment.pk %}" class="btn btn-sm btn-outline-primary" style="font-size: 0.75em;">삭제</a>
+                            </div>
+                        </div>
+                    
+                        <!-- 댓글 본문 (아래줄) -->
+                        <div class="mt-1">
+                            <span style="font-size: 1.1em;">{{ comment.comment }}</span>
+                        </div>
                     </div>
                 </div>
+
+                {% endfor %}
+
+                <!-- 댓글 작성 폼 -->
+                <form method="post" action="{% url 'createcomment' post.pk %}" class="mt-4">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label for="{{ commentform.author.id_for_label }}" class="form-label">작성자</label>
+                        {{ commentform.author }}
+                    </div>  
+
+                    <div class="mb-3">
+                        <label for="{{ commentform.comment.id_for_label }}" class="form-label">댓글</label>
+                        {{ commentform.comment }}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">제출</button>
+                </form>
+
             </div>
-
-            {% endfor %}
-
-            <!-- 댓글 작성 폼 -->
-            <form method="post" action="{% url 'createcomment' post.pk %}" class="mt-4">
-                {% csrf_token %}
-                
-                <div class="mb-3">
-                    <label for="{{ commentform.author.id_for_label }}" class="form-label">작성자</label>
-                    {{ commentform.author }}
-                </div>  
-
-                <div class="mb-3">
-                    <label for="{{ commentform.comment.id_for_label }}" class="form-label">댓글</label>
-                    {{ commentform.comment }}
-                </div>
-
-                <button type="submit" class="btn btn-primary">제출</button>
-            </form>
-
         </div>
-    </div>
-</section>
+    </section>
 </div>
 {% endblock %}
 
