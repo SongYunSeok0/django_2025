@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>댓글 포함 블로그</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+            integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+</head>
+<body>
+<script>
+    // CSRF 토큰 가져오기
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    // 문서 로딩 시 실행
+    $(document).ready(function () {
+        loadAllData();
+
+        // 새 글 작성
+        $('#postAddBtn').click(function () {
+            const post = {
+                title: $('#title').val(),
+                author: $('#author').val(),
+                content: $('#content').val(),
+            };
+            $.ajax({
+                url: '{% url "blogAPI" %}',
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(post),
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function () {
+                    $('#title').val('');
+                    $('#author').val('');
+                    $('#content').val('');
+                    loadAllData();
+                },
+                error: function () {
+                    alert('글 작성 실패');
+                }
+            });
+        });
+
+        // 댓글 작성
+        $('#commentAddBtn').click(function () {
+            const comment = {
+                author: $('#commentAuthor').val(),
+                comment: $('#commentContent').val()
+            };
+            const postId = $('#postSelect').val();
+
+            $.ajax({
+                url: `/example/commentAPI/${postId}/`,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(comment),
+                headers: { 'X-CSRFToken': csrftoken },
+                success: function () {
+                    $('#commentAuthor').val('');
+                    $('#commentContent').val('');
+                    loadAllData();
+                },
+                error: function () {
+                    alert('댓글 작성 실패');
+                }
+            });
+        });
+    });
+
+    // 전체 글과 댓글 불러오기
+    function loadAllData() {
+        $('#postList').empty();
+        $('#postSelect').empty();
+
+        $.ajax({
+            url: '{% url "blogAPI" %}',
+            type: 'GET',
+            success: function (data) {
+                let posts = data;
+                $(posts).each(function () {
+                    let str = '';
+                    str += '<hr>';
+                    str += `<div>`;
+                    str += `${this.title} &nbsp; ${this.id} &nbsp; ${this.content}<br>`;
+                    str += `<div id="comment-area-${this.id}" style="padding-left: 30px;"></div>`;
+                    str += `</div>`;
+                    $('#postList').append(str);
+
+                    $('#postSelect').append(`<option value="${this.id}">${this.title}</option>`);
+
+                    loadComments(this.id);
+                });
+            }
+        });
+    }
+
+    // 특정 글의 댓글 불러오기
+    function loadComments(postId) {
+        $.ajax({
+            url: `/example/commentAPI/${postId}/`,
+            type: 'GET',
+            success: function (comments) {
+                comments.forEach(function (comment) {
+                    $(`#comment-area-${postId}`).append(
+                        `➥ ${comment.id}: ${comment.comment}<br>`
+                    );
+                });
+            }
+        });
+    }
+
+</script>
+
+<!-- 새 글 작성 폼 -->
+<h3>새 글 작성</h3>
+<form id="postform">
+    <input type="text" id="title" placeholder="title" required><br>
+    <input type="text" id="author" placeholder="author" required><br>
+    <input type="text" id="content" placeholder="content" required><br>
+    <input type="button" id="postAddBtn" value="새글 작성하기">
+</form>
+
+<!-- 댓글 작성 폼 -->
+<h3>댓글 작성</h3>
+<form id="commentform">
+    <select id="postSelect"></select><br>
+    <input type="text" id="commentAuthor" placeholder="작성자" required><br>
+    <input type="text" id="commentContent" placeholder="댓글 내용" required><br>
+    <input type="button" id="commentAddBtn" value="댓글 작성하기">
+</form>
+
+<!-- 출력 영역 -->
+<h1>글 목록입니다</h1>
+<div id="postList"></div>
+
+</body>
+</html>
